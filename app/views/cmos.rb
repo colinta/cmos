@@ -7,15 +7,50 @@ class CMOS < UIView
   attr_updates :pin_labels
   attr_updates :pin_colors
 
+  # sizing:
+  attr_updates :pin_width
+  attr_updates :pin_height
+  attr_updates :pin_margin
+  attr_updates :chip_width
+  attr_updates :indent_radius
+
   PinWidth = 15.0
   PinHeight = 14.0
-  PinMargin = 8.0
+  PinMargin = 10.0
   PinFontSize = 7.0
   PinLabelSize = 9.0
   PinStrokeWidth = 3.0
   BoldStrokeWidth = 5.0
-  ChipHeight = 60.0
+  ChipWidth = 70.0
   IndentRadius = 7.0
+
+  def pin_width
+    @pin_width || PinWidth
+  end
+
+  def pin_height
+    @pin_height || PinHeight
+  end
+
+  def pin_margin
+    @pin_margin || PinMargin
+  end
+
+  private def total_pin_width
+    pin_width + pin_margin
+  end
+
+  def chip_height
+    pin_margin + half_pins * total_pin_width
+  end
+
+  def chip_width
+    @chip_width || ChipWidth
+  end
+
+  def indent_radius
+    @indent_radius || IndentRadius
+  end
 
   def attrs
     @attrs ||= {
@@ -49,57 +84,53 @@ class CMOS < UIView
     @pins ||= 14
   end
 
+  def half_pins
+    pins / 2
+  end
+
   def groups
     @groups ||= []
   end
 
   def pin_x_at(index)
-    if index >= pins
-      index = pins * 2 - index - 1
+    if index >= half_pins
+      index = pins - index - 1
     end
-    total_pin_width = PinWidth + PinMargin
-    chip_width = PinMargin + pins * total_pin_width
     center_x = self.width / 2
-    chip_left = center_x - chip_width / 2
-    chip_left + PinMargin + index * total_pin_width
+    chip_left = center_x - chip_height / 2
+    chip_left + pin_margin + index * total_pin_width
   end
 
   def drawRect(rect)
-    total_pin_width = PinWidth + PinMargin
-    width = PinMargin + pins * total_pin_width
-    height = PinHeight * 2 + ChipHeight
-
     center_x = self.width / 2
     center_y = self.height / 2
 
-    chip_width = width
-    chip_height = ChipHeight
-    chip_top = center_y - chip_height / 2
-    chip_bottom = chip_top + chip_height
-    chip_left = center_x - chip_width / 2
-    chip_right = chip_left + chip_width
+    chip_top = center_y - chip_width / 2
+    chip_bottom = chip_top + chip_width
+    chip_left = center_x - chip_height / 2
+    chip_right = chip_left + chip_height
 
     pin_r = 2.0
-    pin_height = PinHeight - pin_r
-    pin_width = PinWidth - pin_r * 2
-    pins.times do |pin|
+    inner_pin_height = pin_height - pin_r
+    inner_pin_width = pin_width - pin_r * 2
+    half_pins.times do |pin|
       p1 = pin + 1
-      p2 = pins * 2 - pin
+      p2 = pins - pin
       pin_color1 = pin_colors[p1] || pin_colors[p1.to_s] || pin_colors[p1.to_s.to_sym]
       pin_color2 = pin_colors[p2] || pin_colors[p2.to_s] || pin_colors[p2.to_s.to_sym]
       p1_label = pin_labels[p1] || pin_labels[p1.to_s] || pin_labels[p1.to_s.to_sym]
       p2_label = pin_labels[p2] || pin_labels[p2.to_s] || pin_labels[p2.to_s.to_sym]
 
       pin_x = pin_x_at(pin)
-      mid_pin_x = pin_x + PinWidth / 2 + pin_r / 2
+      mid_pin_x = pin_x + pin_width / 2
 
       # bottom / left label
       Path.new(pin_x, chip_bottom)
-        .delta(0, pin_height)
+        .delta(0, inner_pin_height)
         .arc_delta([pin_r, 0], angle: -1.pi/2)
-        .delta(pin_width, 0)
+        .delta(inner_pin_width, 0)
         .arc_delta([0, -pin_r], angle: -1.pi/2)
-        .delta(0, -pin_height)
+        .delta(0, -inner_pin_height)
         .stroke(:black)
         .line_width(0.5)
         .fill(pin_color1 || :clear)
@@ -108,18 +139,18 @@ class CMOS < UIView
       t = Text.new(pin + 1)
         .color(:black)
         .font(:monospace.uifont(PinFontSize))
-      t.translate([mid_pin_x, chip_bottom + PinHeight / 2])
+      t.translate([mid_pin_x, chip_bottom + pin_height / 2])
       t.rotate(-90.degrees)
       t.stroke_width(PinStrokeWidth).draw
 
       if p1_label
         if p1_label.is_a?(Decoration)
-          p1_label.bottom.draw_at(mid_pin_x, chip_bottom + PinHeight)
+          p1_label.bottom.draw_at(mid_pin_x, chip_bottom + pin_height)
         else
           Text.new(p1_label.formatted(attrs))
             .color(:black)
             .font(:monospace.uifont(PinFontSize))
-            .translate([mid_pin_x, chip_bottom + PinHeight + 2])
+            .translate([mid_pin_x, chip_bottom + pin_height + 2])
             .halign(:right)
             .rotate(-90.degrees)
             .stroke_width(BoldStrokeWidth)
@@ -129,11 +160,11 @@ class CMOS < UIView
 
       # top / right label
       Path.new(pin_x, chip_top)
-        .delta(0, -pin_height)
+        .delta(0, -inner_pin_height)
         .arc_delta([pin_r, 0], angle: 1.pi/2)
-        .delta(pin_width, 0)
+        .delta(inner_pin_width, 0)
         .arc_delta([0, pin_r], angle: 1.pi/2)
-        .delta(0, pin_height)
+        .delta(0, inner_pin_height)
         .stroke(:black)
         .line_width(0.5)
         .fill(pin_color2 || :clear)
@@ -143,18 +174,18 @@ class CMOS < UIView
         .color(:black)
         .font(:monospace.uifont(PinFontSize))
       t.text(p2)
-      t.translate([mid_pin_x, chip_top - PinHeight / 2])
+      t.translate([mid_pin_x, chip_top - pin_height / 2])
       t.rotate(-90.degrees)
       t.stroke_width(PinStrokeWidth).draw
 
       if p2_label
         if p2_label.is_a?(Decoration)
-          p2_label.top.draw_at(mid_pin_x, chip_top - PinHeight)
+          p2_label.top.draw_at(mid_pin_x, chip_top - pin_height)
         else
           Text.new(p2_label.formatted(attrs))
             .color(:black)
             .font(:monospace.uifont(PinFontSize))
-            .translate([mid_pin_x, chip_top - PinHeight - 2])
+            .translate([mid_pin_x, chip_top - pin_height - 2])
             .halign(:left)
             .rotate(-90.degrees)
             .stroke_width(BoldStrokeWidth)
@@ -164,17 +195,16 @@ class CMOS < UIView
     end
 
     Path.new(chip_left, chip_top)
-      .delta(chip_width, 0)
-      .delta(0, chip_height)
-      .delta(-chip_width, 0)
-      .delta(0, -chip_height / 2 + IndentRadius)
-      .arc_delta([0, -IndentRadius], angle: -1.pi)
+      .delta(chip_height, 0)
+      .delta(0, chip_width)
+      .delta(-chip_height, 0)
+      .delta(0, -chip_width / 2 + indent_radius)
+      .arc_delta([0, -indent_radius], angle: -1.pi)
       .close
       .stroke(:black)
       .fill(:black.uicolor(0.2))
       .draw
 
-    title = "CD4511"
     if title
       Text.new(title)
         .color(:black)
@@ -190,7 +220,7 @@ class CMOS < UIView
       pin_a -= 1
       pin_b -= 1
 
-      if pin_a < pins
+      if pin_a < half_pins
         pin_a, pin_b = [pin_a, pin_b].min, [pin_a, pin_b].max
         top = chip_bottom
         direction = 1
@@ -199,10 +229,10 @@ class CMOS < UIView
         top = chip_top
         direction = -1
       end
-      top += direction * PinHeight
+      top += direction * pin_height
 
       pin_a_x = pin_x_at(pin_a)
-      pin_b_x = pin_x_at(pin_b) + PinWidth
+      pin_b_x = pin_x_at(pin_b) + pin_width
       pin_y1 = top + 18 * direction
       pin_y2 = top + 22 * direction
 
@@ -275,10 +305,10 @@ class Vdd < Decoration
     Path.new(x, y)
       .delta(0, direction * 6)
       .arc_delta([0, direction * r], angle: 2.pi)
-      .delta_move([0, m])
+      .delta_move([0, direction * m])
       .delta([0, direction * 2 * d])
-      .delta_move([-direction * d, -direction * d])
-      .delta([direction * 2 * d, 0])
+      .delta_move([-d, -direction * d])
+      .delta([2 * d, 0])
       .stroke(:black)
       .line_width(0.5)
       .draw
