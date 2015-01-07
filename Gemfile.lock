@@ -1,0 +1,33 @@
+PATH
+  remote: /Users/colinta/Code/rubymotion/motion-kit
+  specs:
+    motion-kit (0.17.0)
+      dbt (~> 1.1.5)
+
+PATH
+  remote: /Users/colinta/Code/rubymotion/sugarcube
+  specs:
+    sugarcube (3.0.4)
+
+PATH
+  remote: /Users/colinta/Code/rubymotion/sweet-kit
+  specs:
+    sweet-kit (0.4.0)
+      motion-kit (~> 0.17.0)
+      sugarcube
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    dbt (1.1.5)
+    rake (10.4.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  dbt
+  motion-kit!
+  rake
+  sugarcube!
+  sweet-kit!
