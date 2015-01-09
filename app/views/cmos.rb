@@ -147,7 +147,22 @@ class CMOS < UIView
         if p1_label.is_a?(Decoration)
           p1_label.bottom.draw_at(mid_pin_x, chip_bottom + pin_height)
         else
-          Text.new(p1_label.formatted(attrs))
+          if p1_label.is_a?(Label)
+            text = p1_label.text
+            overbar = p1_label.overbar?
+            underbar = p1_label.underbar?
+          else
+            text = p1_label
+            overbar = false
+            underbar = false
+          end
+
+          border = []
+          border << :top if overbar
+          border << :bottom if underbar
+
+          Text.new(text.formatted(attrs))
+            .border(border)
             .color(:black)
             .font(:monospace.uifont(PinFontSize))
             .translate([mid_pin_x, chip_bottom + pin_height + 2])
@@ -278,6 +293,34 @@ class Decoration
 
 end
 
+class Label
+  attr_accessor :text
+
+  def overbar(val=true)
+    @overbar = val
+    self
+  end
+
+  def overbar?
+    @overbar
+  end
+
+  def underbar(val=true)
+    @underbar = val
+    self
+  end
+
+  def underbar?
+    @underbar
+  end
+
+  def initialize(text=nil)
+    @text = text
+  end
+
+end
+
+
 class Ground < Decoration
 
   def draw_at(x, y)
@@ -309,6 +352,24 @@ class Vdd < Decoration
       .delta([0, direction * 2 * d])
       .delta_move([-d, -direction * d])
       .delta([2 * d, 0])
+      .stroke(:black)
+      .line_width(0.5)
+      .draw
+  end
+
+end
+
+class Vss < Decoration
+
+  def draw_at(x, y)
+    r = 5.0
+    m = 2.0
+    d = r - m
+    Path.new(x, y)
+      .delta(0, direction * 6)
+      .arc_delta([0, direction * r], angle: 2.pi)
+      .delta_move([0, direction * m])
+      .delta([0, direction * d * 2])
       .stroke(:black)
       .line_width(0.5)
       .draw

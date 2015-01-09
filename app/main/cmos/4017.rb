@@ -1,11 +1,10 @@
-module CD4000
+module CD4017
 
-  def cmos_4000_style
+  def cmos_4017_style
     cmos_style
 
     pins 14
     pin_margin 12
-    chip_width 72
     pin_labels 1 => '',
       2  => '',
       3  => 'A[[sub]]1',

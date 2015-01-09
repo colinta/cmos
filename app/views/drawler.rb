@@ -173,6 +173,10 @@ module GM
         raise 'Implement the `draw` method'
       end
 
+      def frame
+        CGRect.new([0, 0], [0, 0])
+      end
+
       def defaults(context=nil)
         context ||= UIGraphicsGetCurrentContext()
         CGContextSaveGState(context)
@@ -236,11 +240,11 @@ module GM
 
       def draw
         context = UIGraphicsGetCurrentContext()
-        defaults(context) {
+        defaults(context) do
           CGContextMoveToPoint(context, p1.x, p1.y)
           CGContextAddLineToPoint(context, p2.x, p2.y)
           CGContextStrokePath(context)
-        }
+        end
       end
 
       def frame
@@ -370,6 +374,10 @@ module GM
 
       def last
         @path.currentPoint
+      end
+
+      def frame
+        @path.bounds
       end
 
       def move_to(pt_or_x, y=nil)
@@ -505,6 +513,7 @@ module GM
         end
         CGContextDrawLinearGradient(context, gradient, p1, p2, options)
       end
+
     end
 
     class RadialGradient < Primitive
@@ -542,19 +551,71 @@ module GM
         gradient = CGGradientCreateWithColors(color_space, cgcolors, points.to_pointer(:float))
         CGContextDrawRadialGradient(context, gradient, center, 0, center, radius, self.extended ? KCGGradientDrawsBeforeStartLocation|KCGGradientDrawsAfterEndLocation : 0)
       end
+
+      def frame
+        CGRectStandardize(CGRectMake(center_x - radius, center_y - radius,  radius * 2, radius * 2))
+      end
+
+      def center_x ; @center[0] ; end
+      def center_y ; @center[1] ; end
+
     end
 
     class Text < Draw
+      attr_assigner(:stroke_width, 1)
       attr_assigner(:text) { |text| text.is_a?(NSAttributedString) ? text : text.to_s }
       attr_assigner(:font) { |font| font.uifont }
       attr_assigner(:color, UIColor.blackColor) { |val| val && val.uicolor }
       attr_assigner(:background) { |val| val && val.uicolor }
-      attr_assigner(:stroke_width)
+      attr_assigner(:border, nil) { |val| val && (val.is_a?(Enumerable) ? val : [val]) }
       attr_assigner(:halign, :center)  # :left :right
       attr_assigner(:valign, :center)  # :top :bottom
 
       def initialize(text=nil)
         self.text = text
+      end
+
+      def frame
+        CGRect.new([0, 0], size)
+      end
+
+      def size
+        if @text.is_a?(NSAttributedString)
+          @text.size
+        elsif @text
+          @text.sizeWithAttributes(text_attrs)
+        else
+          CGSize.new(0, 0)
+        end
+      end
+
+      def draw_border
+        return unless border
+        context = UIGraphicsGetCurrentContext()
+        l = draw_point_left
+        r = l + size.width
+        t = draw_point_top
+        b = t + size.height
+        border.each do |location|
+          case location
+          when :top
+            CGContextMoveToPoint(context, l, t)
+            CGContextAddLineToPoint(context, r, t)
+            CGContextStrokePath(context)
+          when :bottom
+            CGContextMoveToPoint(context, l, b)
+            CGContextAddLineToPoint(context, r, b)
+            CGContextStrokePath(context)
+          when :left
+            CGContextMoveToPoint(context, l, t)
+            CGContextAddLineToPoint(context, l, b)
+            CGContextStrokePath(context)
+          when :right
+            CGContextMoveToPoint(context, r, t)
+            CGContextAddLineToPoint(context, r, b)
+            CGContextStrokePath(context)
+          end
+        end
       end
 
       def draw
@@ -565,56 +626,59 @@ module GM
           elsif @text
             draw_string
           end
+          draw_border
         end
       end
 
-      private def draw_point(size)
-        x = case halign
-          when :left
-            0
-          when :center
-            -size.width / 2
-          when :right
-            -size.width
-          end
-
-        y = case valign
-          when :top
-            0
-          when :center
-            -size.height / 2
-          when :bottom
-            -size.height
-          end
-
-        CGPoint.new(x, y)
+      private def draw_point_left
+        case halign
+        when :center
+          -size.width / 2
+        when :right
+          -size.width
+        else
+          0
+        end
       end
+
+      private def draw_point_top
+        case valign
+        when :center
+          -size.height / 2
+        when :bottom
+          -size.height
+        else
+          0
+        end
+      end
+
+      private def draw_point
+        CGPoint.new(draw_point_left, draw_point_top)
+      end
+
+      def text_attrs
+        attrs = {}
+        possibles = {
+          NSFontAttributeName            => font,
+          NSForegroundColorAttributeName => color,
+          NSBackgroundColorAttributeName => background,
+          NSStrokeWidthAttributeName     => stroke_width,
+        }.each do |key, value|
+          if value
+            attrs[key] = value
+          end
+        end
+
+        attrs
+      end
+      private :text_attrs
 
       private def draw_string
-        attrs = {}
-        if font
-          attrs[NSFontAttributeName] = font
-        end
-
-        if color
-          attrs[NSForegroundColorAttributeName] = color
-        end
-
-        if background
-          attrs[NSBackgroundColorAttributeName] = background
-        end
-
-        if stroke_width
-          attrs[NSStrokeWidthAttributeName] = stroke_width
-        end
-
-        size = @text.sizeWithAttributes(attrs)
-        @text.drawAtPoint(draw_point(size), withAttributes: attrs)
+        @text.drawAtPoint(draw_point, withAttributes: text_attrs)
       end
 
       private def draw_attributed
-        size = @text.size
-        @text.drawAtPoint(draw_point(size))
+        @text.drawAtPoint(draw_point)
       end
 
     end
