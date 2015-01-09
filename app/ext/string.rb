@@ -9,6 +9,14 @@ end
 
 class NSString
 
+  def overbar
+    Label.new(self).overbar
+  end
+
+  def underbar
+    Label.new(self).underbar
+  end
+
   def formatted(fonts={})
     output = NSMutableAttributedString.new
     scanner = NSScanner.scannerWithString(self)

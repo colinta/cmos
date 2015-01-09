@@ -197,7 +197,22 @@ class CMOS < UIView
         if p2_label.is_a?(Decoration)
           p2_label.top.draw_at(mid_pin_x, chip_top - pin_height)
         else
-          Text.new(p2_label.formatted(attrs))
+          if p2_label.is_a?(Label)
+            text = p2_label.text
+            overbar = p2_label.overbar?
+            underbar = p2_label.underbar?
+          else
+            text = p2_label
+            overbar = false
+            underbar = false
+          end
+
+          border = []
+          border << :top if overbar
+          border << :bottom if underbar
+
+          Text.new(text.formatted(attrs))
+            .border(border)
             .color(:black)
             .font(:monospace.uifont(PinFontSize))
             .translate([mid_pin_x, chip_top - pin_height - 2])

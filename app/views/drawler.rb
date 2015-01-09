@@ -592,6 +592,7 @@ module GM
       def draw_border
         return unless border
         context = UIGraphicsGetCurrentContext()
+        CGContextSetLineWidth(context, 0.5)
         l = draw_point_left
         r = l + size.width
         t = draw_point_top
