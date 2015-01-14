@@ -5,7 +5,7 @@ class MainLayout < MK::Layout
 
   def layout
     background_color :black
-    add TO220, :to220
+    add TO220, :lm7805
     # add TO92, :to92
     # add CMOS, :cmos_4017
   end
@@ -15,6 +15,10 @@ class MainLayout < MK::Layout
     size [387, 150]
     center ['50%', '50%']
     autoresizing_mask :pin_to_center
+  end
+
+  def lm7805_style
+    to220_style
 
     title 'LM7805'
     pin_rotation false
