@@ -365,6 +365,7 @@ module GM
           @path = pt_or_path
         else
           @path = UIBezierPath.bezierPath
+          @path.usesEvenOddFillRule = true
 
           if pt_or_path
             move_to(pt_or_path, y)

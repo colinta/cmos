@@ -7,6 +7,15 @@ class NSAttributedString
 end
 
 
+class Numeric
+
+  def formatted(fonts={})
+    to_s.formatted(fonts)
+  end
+
+end
+
+
 class NSString
 
   def overbar

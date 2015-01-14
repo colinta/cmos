@@ -12,6 +12,7 @@ class CMOS < UIView
   attr_updates :pin_height
   attr_updates :pin_margin
   attr_updates :chip_width
+  attr_updates :chip_color
   attr_updates :indent_radius
 
   PinWidth = 15.0
@@ -48,14 +49,19 @@ class CMOS < UIView
     @chip_width || ChipWidth
   end
 
+  def chip_color
+    @chip_color || :black.uicolor(0.2)
+  end
+
   def indent_radius
     @indent_radius || IndentRadius
   end
 
-  def attrs
-    @attrs ||= {
-      'normal' => { NSFontAttributeName => :monospace.uifont(PinFontSize), NSStrokeWidthAttributeName => 3, },
-      'bold' => { NSFontAttributeName => :monospace.uifont(PinFontSize), NSStrokeWidthAttributeName => 5, },
+  def attrs(size=nil)
+    size ||= PinFontSize
+    {
+      'normal' => { NSFontAttributeName => :monospace.uifont(size), NSStrokeWidthAttributeName => 3, },
+      'bold' => { NSFontAttributeName => :monospace.uifont(size), NSStrokeWidthAttributeName => 5, },
     }
   end
 
@@ -136,12 +142,12 @@ class CMOS < UIView
         .fill(pin_color1 || :clear)
         .draw
 
-      t = Text.new(pin + 1)
+      t = Text.new(p1.formatted(attrs))
         .color(:black)
-        .font(:monospace.uifont(PinFontSize))
-      t.translate([mid_pin_x, chip_bottom + pin_height / 2])
-      t.rotate(-90.degrees)
-      t.stroke_width(PinStrokeWidth).draw
+        .translate([mid_pin_x, chip_bottom + pin_height / 2])
+        .rotate(-90.degrees)
+        .stroke_width(PinStrokeWidth)
+        .draw
 
       if p1_label
         if p1_label.is_a?(Decoration)
@@ -164,7 +170,6 @@ class CMOS < UIView
           Text.new(text.formatted(attrs))
             .border(border)
             .color(:black)
-            .font(:monospace.uifont(PinFontSize))
             .translate([mid_pin_x, chip_bottom + pin_height + 2])
             .halign(:right)
             .rotate(-90.degrees)
@@ -185,13 +190,12 @@ class CMOS < UIView
         .fill(pin_color2 || :clear)
         .draw
 
-      t = Text.new(pin + 1)
+      t = Text.new(p2.formatted(attrs))
         .color(:black)
-        .font(:monospace.uifont(PinFontSize))
-      t.text(p2)
-      t.translate([mid_pin_x, chip_top - pin_height / 2])
-      t.rotate(-90.degrees)
-      t.stroke_width(PinStrokeWidth).draw
+        .translate([mid_pin_x, chip_top - pin_height / 2])
+        .rotate(-90.degrees)
+        .stroke_width(PinStrokeWidth)
+        .draw
 
       if p2_label
         if p2_label.is_a?(Decoration)
@@ -214,7 +218,6 @@ class CMOS < UIView
           Text.new(text.formatted(attrs))
             .border(border)
             .color(:black)
-            .font(:monospace.uifont(PinFontSize))
             .translate([mid_pin_x, chip_top - pin_height - 2])
             .halign(:left)
             .rotate(-90.degrees)
@@ -232,15 +235,14 @@ class CMOS < UIView
       .arc_delta([0, -indent_radius], angle: -1.pi)
       .close
       .stroke(:black)
-      .fill(:black.uicolor(0.2))
+      .fill(chip_color)
       .draw
 
     if title
-      Text.new(title)
+      Text.new(title.formatted(attrs(10)))
         .color(:black)
         .translate([chip_left - 10, center_y])
         .rotate(-0.5.pi)
-        .font(:monospace.uifont(10))
         .stroke_width(BoldStrokeWidth)
         .draw
     end
