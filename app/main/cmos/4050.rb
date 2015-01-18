@@ -6,37 +6,37 @@ module CD4050
     title 'CD4050'
     pins 16
     pin_labels 1 => Vdd.new,
-      2  => 'A[[sub]]o[[/]]',
-      3  => 'A[[sub]]i[[/]]',
-      4  => 'B[[sub]]o[[/]]',
-      5  => 'B[[sub]]i[[/]]',
-      6  => 'C[[sub]]o[[/]]',
-      7  => 'C[[sub]]i[[/]]',
+      2  => 'A'.fsub('o'),
+      3  => 'A'.fsub('i'),
+      4  => 'B'.fsub('o'),
+      5  => 'B'.fsub('i'),
+      6  => 'C'.fsub('o'),
+      7  => 'C'.fsub('i'),
       8  => Ground.new,
-      9  => 'D[[sub]]i[[/]]',
-      10 => 'D[[sub]]o[[/]]',
-      11 => 'E[[sub]]i[[/]]',
-      12 => 'E[[sub]]o[[/]]',
-      13 => '[[bold]]NC[[/]]',
-      14 => 'F[[sub]]i[[/]]',
-      15 => 'F[[sub]]o[[/]]',
-      16 => '[[bold]]NC[[/]]'
-    pin_colors 1 => :red,  # Vdd
-      8  => :green,        # GND
-      2 => '#463cff', # Ao
-      3 => '#6b5cff', # Ai
-      4 => '#fd9222', # Bo
-      5 => '#faa350', # Bi
-      6 => '#f9f416', # Co
-      7 => '#f9fa84', # Ci
-      9 => '#9d29f9', # Di
-      10=> '#8e00f9', # Do
-      11=> '#c98651', # Ei
-      12=> '#ab5b17', # Eo
-      14=> '#4fc639', # Fi
-      15=> '#29a514', # Fo
-      13 => :dark_gray,  # NC
-      16 => :dark_gray   # NC
+      9  => 'D'.fsub('i'),
+      10 => 'D'.fsub('o'),
+      11 => 'E'.fsub('i'),
+      12 => 'E'.fsub('o'),
+      13 => 'NC'.fbold,
+      14 => 'F'.fsub('i'),
+      15 => 'F'.fsub('o'),
+      16 => 'NC'.fbold
+    pin_colors 1 => :vdd,
+      2  => :a_out,
+      3  => :a_in,
+      4  => :b_out,
+      5  => :b_in,
+      6  => :c_out,
+      7  => :c_in,
+      8  => :ground,
+      9  => :d_in,
+      10 => :d_out,
+      11 => :e_in,
+      12 => :e_out,
+      13 => :nc,
+      14 => :f_in,
+      15 => :f_out,
+      16 => :nc
     groups << [2, 3]
     groups << [4, 5]
     groups << [6, 7]

@@ -722,6 +722,11 @@ module GM
       def draw
         context = UIGraphicsGetCurrentContext()
         CGContextSaveGState(context)  # save before clipping
+        if self.path.is_a?(Path)
+          path = self.path.path
+        else
+          path = self.path
+        end
         path.addClip
 
         @inside.each do |drawing|

@@ -3,8 +3,8 @@ module CD4017
   def cmos_4017_style
     cmos_style
 
+    title 'CD4017'
     pins 16
-    pin_margin 12
     pin_labels 1 => 'Q6',
       2  => 'Q2',
       3  => 'Q1',
@@ -21,22 +21,22 @@ module CD4017
       14 => 'CLK',
       15 => 'RST'.overbar,
       16 => Vdd.new
-    pin_colors 1 => '#463cff',
-      2 => '#463cff',  # Output
-      3 => '#463cff',
-      4 => '#463cff',
-      5 => '#463cff',
-      6 => '#463cff',
-      7 => '#463cff',
-      8 => :green,  # GND
-      9 => '#463cff',
-      10=> '#463cff',
-      11=> '#463cff',
-      12=> '#f9f416', # CO / special function
-      13=> '#fd9222', # EN
-      14=> '#9d29f9', # CLK
-      15=> '#c98651', # RST
-      16=> :red  # Vdd
+    pin_colors 1 => :out,
+      2  => :out,
+      3  => :out,
+      4  => :out,
+      5  => :out,
+      6  => :out,
+      7  => :out,
+      8  => :ground,
+      9  => :out,
+      10 => :out,
+      11 => :out,
+      12 => :co,
+      13 => :en,
+      14 => :clk,
+      15 => :rst,
+      16 => :vdd
     groups << [1, 7]
     groups << [9, 11]
   end

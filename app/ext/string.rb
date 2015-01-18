@@ -18,6 +18,22 @@ end
 
 class NSString
 
+  def fsub(txt=nil)
+    if txt.nil?
+      '[[sub]]' + self + '[[/]]'
+    else
+      self + '[[sub]]' + txt + '[[/]]'
+    end
+  end
+
+  def fbold(txt=nil)
+    if txt.nil?
+      '[[bold]]' + self + '[[/]]'
+    else
+      self + '[[bold]]' + txt + '[[/]]'
+    end
+  end
+
   def overbar
     Label.new(self).overbar
   end
