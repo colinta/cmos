@@ -1,9 +1,10 @@
 module CD4511
 
-  def cmos_4511_style
+  def cmos4511_style
     cmos_style
 
     title 'CD4511'
+    desc 'BCD to 7-segment'
     pins 16
     pin_labels 1 => 'A'.fsub('2'),
       2  => 'A'.fsub('3'),

@@ -1,9 +1,10 @@
 module CD4013
 
-  def cmos_4013_style
+  def cmos4013_style
     cmos_style
 
     title 'CD4013'
+    desc 'Dual D-type flip-flop'
     pins 14
     pin_labels 1 => 'Q'.fsub('A'),
       2  => 'Q'.fsub('A').overbar,

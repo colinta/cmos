@@ -4,19 +4,20 @@ module PCF8574
     cmos_style
 
     title 'PCF8574'
+    desc '8-bit I/O Expander'
     pins 16
     pin_labels 1 => 'S'.fsub('0'),
       2  => 'S'.fsub('1'),
       3  => 'S'.fsub('2'),
-      4  => 'I'.fsub('1'),
-      5  => 'I'.fsub('2'),
-      6  => 'I'.fsub('3'),
-      7  => 'I'.fsub('4'),
+      4  => '1',
+      5  => '2',
+      6  => '3',
+      7  => '4',
       8  => Ground.new,
-      9  => 'I'.fsub('5'),
-      10 => 'I'.fsub('6'),
-      11 => 'I'.fsub('7'),
-      12 => 'I'.fsub('8'),
+      9  => '5',
+      10 => '6',
+      11 => '7',
+      12 => '8',
       13 => 'INT'.overbar,
       14 => 'SCL',
       15 => 'SDA',

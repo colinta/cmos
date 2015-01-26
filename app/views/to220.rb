@@ -1,7 +1,9 @@
 # @requires GM::Drawler
 class TO220 < UIView
   include GM::D
+  attr_updates :orientation
   attr_updates :title
+  attr_updates :desc
   attr_updates :chip_height
   attr_updates :chip_width
   attr_updates :pins
@@ -19,6 +21,18 @@ class TO220 < UIView
       'normal' => { NSFontAttributeName => :monospace.uifont(PinFontSize), NSStrokeWidthAttributeName => 3, },
       'bold' => { NSFontAttributeName => :monospace.uifont(PinFontSize), NSStrokeWidthAttributeName => 5, },
     }
+  end
+
+  def orientation
+    @orientation || :vertical
+  end
+
+  def vertical?
+    orientation == :vertical
+  end
+
+  def horizontal?
+    orientation == :horizontal
   end
 
   def pin_labels
@@ -81,17 +95,27 @@ class TO220 < UIView
     20
   end
 
+  def pin_color
+    '#b3b3b3'
+  end
+
   def wide_length
     10
   end
 
   def drawRect(rect)
+    center_x = self.width / 2
     center_y = self.height / 2
+    if horizontal?
+      center_y -= 10
+    end
 
     total_height = pin_length + chip_height + sink_height
     chip_left = (self.width - total_height) / 2
     chip_top = (self.height - chip_width) / 2
-    center_y = self.height / 2
+    if horizontal?
+      chip_top -= 10
+    end
 
     Path.new(chip_left, chip_top)
       .delta(sink_height, 0)
@@ -130,23 +154,33 @@ class TO220 < UIView
         .delta(0, -pin_width)
         .stroke(:black)
         .line_width(0.5)
-        .fill(sink_color || :clear)
+        .fill(pin_color || :clear)
         .draw
 
       pin = pins - pin_index
       label = pin_labels[pin] || pin_labels[pin.to_s] || pin_labels[pin.to_s.to_sym]
       if label
-        label_x = pin_left + pin_length + 2
+        label_x = pin_left + pin_length
         label_y = pin_top + pin_bend_amount + pin_width / 2
-        Text.new(label.formatted(attrs))
-          .valign(pin_rotation ? :top : :center)
-          .halign(pin_rotation ? :center : :left)
-          .translate([label_x, label_y])
-          .rotate(pin_rotation ? -90.degrees : 0)
-          .color(:black)
-          .font(:monospace.uifont(PinFontSize))
-          .stroke_width(PinStrokeWidth)
-          .draw
+        if label.is_a?(Decoration)
+          context = UIGraphicsGetCurrentContext()
+          CGContextSaveGState(context)
+          CGContextTranslateCTM(context, label_x, label_y)
+          CGContextRotateCTM(context, -0.5.pi)
+          label.bottom.draw_at(0, 0)
+          CGContextRestoreGState(context)
+        else
+          label_x += 2
+          Text.new(label.formatted(attrs))
+            .valign(pin_rotation ? :top : :center)
+            .halign(pin_rotation ? :center : :left)
+            .translate([label_x, label_y])
+            .rotate(pin_rotation ? -90.degrees : 0)
+            .color(:black)
+            .font(:monospace.uifont(PinFontSize))
+            .stroke_width(PinStrokeWidth)
+            .draw
+          end
       end
     end
 
@@ -164,6 +198,15 @@ class TO220 < UIView
       Text.new(title.formatted(attrs))
         .translate([chip_left + sink_height + chip_height / 2, chip_top + chip_width / 2])
         .rotate(-90.degrees)
+        .color(:black)
+        .font(:monospace.uifont(PinFontSize))
+        .stroke_width(PinStrokeWidth)
+        .draw
+    end
+
+    if desc && horizontal?
+      Text.new(desc.formatted(attrs))
+        .translate([center_x, self.height - 20])
         .color(:black)
         .font(:monospace.uifont(PinFontSize))
         .stroke_width(PinStrokeWidth)

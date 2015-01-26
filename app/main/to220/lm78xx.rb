@@ -1,9 +1,10 @@
-module LM7805
+module LM78xx
 
-  def lm7805_style
+  def lm78xx_style
     to220_style
 
-    title 'LM7805'
+    title 'LM78xx'
+    desc 'Power Regulator'
     pin_rotation false
     pin_labels 1 => 'Input',
       2 => 'Common',

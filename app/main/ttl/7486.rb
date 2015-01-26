@@ -1,24 +1,24 @@
-module CD4093
+module TTL7486
 
-  def cmos4093_style
+  def ttl7486_style
     cmos_style
 
-    title 'CD4093'
-    desc 'Quad 2-input NAND Schmitt'
+    title '7486'
+    desc 'Quad 2-input XOR'
     pins 14
     pin_labels 1 => 'A'.fsub('1'),
       2  => 'A'.fsub('2'),
       3  => 'A'.fsub('o'),
-      4  => 'B'.fsub('o'),
-      5  => 'B'.fsub('1'),
-      6  => 'B'.fsub('2'),
+      4  => 'B'.fsub('1'),
+      5  => 'B'.fsub('2'),
+      6  => 'B'.fsub('o'),
       7  => Ground.new,
-      8  => 'C'.fsub('1'),
+      8  => 'C'.fsub('o'),
       9  => 'C'.fsub('2'),
-      10 => 'C'.fsub('o'),
+      10 => 'C'.fsub('1'),
       11 => 'D'.fsub('o'),
-      12 => 'D'.fsub('1'),
-      13 => 'D'.fsub('2'),
+      12 => 'D'.fsub('2'),
+      13 => 'D'.fsub('1'),
       14 => Vdd.new
     pin_colors 1 => :a_in,
       2 => :a_in,
@@ -27,9 +27,9 @@ module CD4093
       5 => :b_in,
       6 => :b_out,
       7 => :ground,
-      8 => :c_in,
+      8 => :c_out,
       9 => :c_in,
-      10=> :c_out,
+      10=> :c_in,
       11=> :d_out,
       12=> :d_in,
       13=> :d_in,

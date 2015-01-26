@@ -1,8 +1,11 @@
 # @requires GM::Drawler
 class CMOS < UIView
   include GM::D
-  attr_updates :attrs
+  attr_updates :orientation
   attr_updates :title
+  attr_updates :filename
+  attr_updates :desc
+  attr_updates :attrs
   attr_updates :pins
   attr_updates :pin_labels
   attr_updates :pin_colors
@@ -24,6 +27,22 @@ class CMOS < UIView
   BoldStrokeWidth = 5.0
   ChipWidth = 70.0
   IndentRadius = 7.0
+
+  def orientation
+    @orientation || :vertical
+  end
+
+  def vertical?
+    orientation == :vertical
+  end
+
+  def horizontal?
+    orientation == :horizontal
+  end
+
+  def filename
+    @filename || @title || (@desc && @desc.gsub(' ', '_').downcase) || 'no_name'
+  end
 
   def pin_width
     @pin_width || PinWidth
@@ -145,12 +164,13 @@ class CMOS < UIView
       t = Text.new(p1.formatted(attrs))
         .color(:black)
         .translate([mid_pin_x, chip_bottom + pin_height / 2])
-        .rotate(-90.degrees)
+        .rotate(vertical? ? -90.degrees : 0)
         .stroke_width(PinStrokeWidth)
         .draw
 
       if p1_label
         if p1_label.is_a?(Decoration)
+          p1_label.orientation = self.orientation
           p1_label.bottom.draw_at(mid_pin_x, chip_bottom + pin_height)
         else
           if p1_label.is_a?(Label)
@@ -167,14 +187,21 @@ class CMOS < UIView
           border << :top if overbar
           border << :bottom if underbar
 
-          Text.new(text.formatted(attrs))
+          t = Text.new(text.formatted(attrs))
             .border(border)
             .color(:black)
             .translate([mid_pin_x, chip_bottom + pin_height + 2])
-            .halign(:right)
-            .rotate(-90.degrees)
             .stroke_width(BoldStrokeWidth)
-            .draw
+          if vertical?
+            t.valign(:center)
+            t.halign(:right)
+            t.rotate(-90.degrees)
+          else
+            t.valign(:top)
+            t.halign(:center)
+            t.rotate(0.degrees)
+          end
+          t.draw
         end
       end
 
@@ -193,12 +220,13 @@ class CMOS < UIView
       t = Text.new(p2.formatted(attrs))
         .color(:black)
         .translate([mid_pin_x, chip_top - pin_height / 2])
-        .rotate(-90.degrees)
+        .rotate(vertical? ? -90.degrees : 0)
         .stroke_width(PinStrokeWidth)
         .draw
 
       if p2_label
         if p2_label.is_a?(Decoration)
+          p2_label.orientation = self.orientation
           p2_label.top.draw_at(mid_pin_x, chip_top - pin_height)
         else
           if p2_label.is_a?(Label)
@@ -215,14 +243,21 @@ class CMOS < UIView
           border << :top if overbar
           border << :bottom if underbar
 
-          Text.new(text.formatted(attrs))
+          t = Text.new(text.formatted(attrs))
             .border(border)
             .color(:black)
             .translate([mid_pin_x, chip_top - pin_height - 2])
-            .halign(:left)
-            .rotate(-90.degrees)
             .stroke_width(BoldStrokeWidth)
-            .draw
+          if vertical?
+            t.valign(:center)
+            t.halign(:left)
+            t.rotate(-90.degrees)
+          else
+            t.valign(:bottom)
+            t.halign(:center)
+            t.rotate(0.degrees)
+          end
+          t.draw
         end
       end
     end
@@ -237,15 +272,6 @@ class CMOS < UIView
       .stroke(:black)
       .fill(chip_color)
       .draw
-
-    if title
-      Text.new(title.formatted(attrs(10)))
-        .color(:black)
-        .translate([chip_left - 10, center_y])
-        .rotate(-0.5.pi)
-        .stroke_width(BoldStrokeWidth)
-        .draw
-    end
 
     groups.each do |group|
       pin_a, pin_b = group
@@ -276,120 +302,24 @@ class CMOS < UIView
         .stroke(:black)
         .draw
     end
-  end
 
-end
+    if title
+      Text.new(title.formatted(attrs(10)))
+        .color(:black)
+        .stroke_width(BoldStrokeWidth)
+        .translate([chip_left - 10, center_y])
+        .rotate(-0.5.pi)
+        .draw
+    end
 
-
-class Decoration
-  include GM::D
-
-  def top
-    @is_top = true
-    self
-  end
-  def top?
-    @is_top
-  end
-
-  def bottom
-    @is_top = false
-    self
-  end
-  def bottom?
-    !@is_top
-  end
-
-  def direction
-    bottom? ? 1 : -1
-  end
-
-  def context
-    UIGraphicsGetCurrentContext()
-  end
-
-end
-
-class Label
-  attr_accessor :text
-
-  def overbar(val=true)
-    @overbar = val
-    self
-  end
-
-  def overbar?
-    @overbar
-  end
-
-  def underbar(val=true)
-    @underbar = val
-    self
-  end
-
-  def underbar?
-    @underbar
-  end
-
-  def initialize(text=nil)
-    @text = text
-  end
-
-end
-
-
-class Ground < Decoration
-
-  def draw_at(x, y)
-    Path.new(x, y)
-      .delta(0, direction * 7)
-      .delta_move(-7, 0)
-      .delta(14, 0)
-      .delta_move(-11, direction * 3)
-      .delta(8, 0)
-      .delta_move(-5, direction * 3)
-      .delta(2, 0)
-      .stroke(:black)
-      .line_width(0.5)
-      .draw
-  end
-
-end
-
-class Vdd < Decoration
-
-  def draw_at(x, y)
-    r = 5.0
-    m = 2.0
-    d = r - m
-    Path.new(x, y)
-      .delta(0, direction * 6)
-      .arc_delta([0, direction * r], angle: 2.pi)
-      .delta_move([0, direction * m])
-      .delta([0, direction * 2 * d])
-      .delta_move([-d, -direction * d])
-      .delta([2 * d, 0])
-      .stroke(:black)
-      .line_width(0.5)
-      .draw
-  end
-
-end
-
-class Vss < Decoration
-
-  def draw_at(x, y)
-    r = 5.0
-    m = 2.0
-    d = r - m
-    Path.new(x, y)
-      .delta(0, direction * 6)
-      .arc_delta([0, direction * r], angle: 2.pi)
-      .delta_move([0, direction * m])
-      .delta([0, direction * d * 2])
-      .stroke(:black)
-      .line_width(0.5)
-      .draw
+    if desc
+      Text.new(desc.formatted(attrs(10)))
+        .color(:black)
+        .stroke_width(BoldStrokeWidth)
+        .translate([chip_left + indent_radius + (chip_height - indent_radius) / 2, center_y])
+        .rotate(vertical? ? -180.degrees : 0)
+        .draw
+    end
   end
 
 end

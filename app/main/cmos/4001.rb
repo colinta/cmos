@@ -1,10 +1,11 @@
 # Quad 2-in NOR
 module CD4001
 
-  def cmos_4001_style
+  def cmos4001_style
     cmos_style
 
     title 'CD4001'
+    desc 'Quad 2-input NOR'
     pins 14
     pin_labels 1 => 'A'.fsub('1'),
       2  => 'A'.fsub('2'),
@@ -34,10 +35,10 @@ module CD4001
       12 => :d_in,
       13 => :d_in,
       14 => :vdd
-    groups << [1,2]
-    groups << [5,6]
-    groups << [8,9]
-    groups << [12,13]
+    groups << [1,3]
+    groups << [4,6]
+    groups << [8,10]
+    groups << [11,13]
   end
 
 end

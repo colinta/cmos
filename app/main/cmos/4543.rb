@@ -1,9 +1,10 @@
 module CD4543
 
-  def cmos_4543_style
+  def cmos4543_style
     cmos_style
 
     title 'CD4543'
+    desc 'BCD to 7-segment'
     pins 16
     pin_labels 1 => 'EN',
       2  => 'C',

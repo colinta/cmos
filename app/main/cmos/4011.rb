@@ -1,9 +1,10 @@
 module CD4011
 
-  def cmos_4011_style
+  def cmos4011_style
     cmos_style
 
     title 'CD4011'
+    desc 'Quad 2-input NAND'
     pins 14
     pin_labels 1 => 'A'.fsub('1'),
       2  => 'A'.fsub('2'),

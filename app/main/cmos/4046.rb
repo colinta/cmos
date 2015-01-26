@@ -1,9 +1,10 @@
 module CD4046
 
-  def cmos_4046_style
+  def cmos4046_style
     cmos_style
 
     title 'CD4046 PLL'
+    desc 'Phase Locked Loop'
     pins 16
     pin_labels 1 => 'PULS',
       2  => 'PC1'.fsub('o'),

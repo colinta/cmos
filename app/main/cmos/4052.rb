@@ -1,13 +1,14 @@
 module CD4052
 
-  def cmos_4052_style
+  def cmos4052_style
     cmos_style
 
     title 'CD4052'
+    desc '4-channel MUX/DEMUX'
     pins 16
     pin_labels 1 => 'Y'.fsub('1'),
       2  => 'Y'.fsub('3'),
-      3  => 'Y'.fsub('io'),
+      3  => '<->',
       4  => 'Y'.fsub('4'),
       5  => 'Y'.fsub('2'),
       6  => 'EN',
@@ -17,7 +18,7 @@ module CD4052
       10 => 'S'.fsub('0'),
       11 => 'X'.fsub('4'),
       12 => 'X'.fsub('1'),
-      13 => 'X'.fsub('io'),
+      13 => '<->',
       14 => 'X'.fsub('2'),
       15 => 'X'.fsub('3'),
       16 => Vdd.new

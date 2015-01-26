@@ -1,9 +1,10 @@
 module CD4050
 
-  def cmos_4050_style
+  def cmos4050_style
     cmos_style
 
     title 'CD4050'
+    desc 'Hex Buffers'
     pins 16
     pin_labels 1 => Vdd.new,
       2  => 'A'.fsub('o'),

@@ -1,9 +1,10 @@
 module CD4000
 
-  def cmos_4000_style
+  def cmos4000_style
     cmos_style
 
     title 'CD4000'
+    desc 'Dual 3-input NOR'
     pins 14
     pin_labels 1 => '',
       2  => '',
@@ -33,8 +34,9 @@ module CD4000
       12 => :b_in,
       13 => :b_in,
       14 => :vdd
-    groups << [3, 5]
-    groups << [11, 13]
+    groups << [3, 6]
+    groups << [8, 9]
+    groups << [10, 13]
   end
 
 end

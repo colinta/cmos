@@ -4,6 +4,7 @@ module LT1302
     cmos_style
 
     title 'LT1302'
+    desc "Step up\nDC-DC"
     pins 8
     pin_margin 10
     pin_labels 1 => Ground.new,

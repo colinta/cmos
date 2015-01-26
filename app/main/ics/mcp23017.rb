@@ -4,16 +4,17 @@ module MCP23017
     cmos_style
 
     title 'MCP23017'
+    desc '16-bit I/O Expander'
     pins 28
     pin_margin 8
-    pin_labels 1 => 'B'.fsub('0'),
-      2  => 'B'.fsub('1'),
-      3  => 'B'.fsub('2'),
-      4  => 'B'.fsub('3'),
-      5  => 'B'.fsub('4'),
-      6  => 'B'.fsub('5'),
-      7  => 'B'.fsub('6'),
-      8  => 'B'.fsub('7'),
+    pin_labels 1 => '0'.fsub('B'),
+      2  => '1'.fsub('B'),
+      3  => '2'.fsub('B'),
+      4  => '3'.fsub('B'),
+      5  => '4'.fsub('B'),
+      6  => '5'.fsub('B'),
+      7  => '6'.fsub('B'),
+      8  => '7'.fsub('B'),
       9  => Vdd.new,
       10 => Ground.new,
       11 => 'NC'.fbold,
@@ -26,14 +27,14 @@ module MCP23017
       18 => 'RST'.overbar,
       19 => 'INT'.fsub('B'),
       20 => 'INT'.fsub('A'),
-      21 => 'A'.fsub('0'),
-      22 => 'A'.fsub('1'),
-      23 => 'A'.fsub('2'),
-      24 => 'A'.fsub('3'),
-      25 => 'A'.fsub('4'),
-      26 => 'A'.fsub('5'),
-      27 => 'A'.fsub('6'),
-      28 => 'A'.fsub('7')
+      21 => '0'.fsub('A'),
+      22 => '1'.fsub('A'),
+      23 => '2'.fsub('A'),
+      24 => '3'.fsub('A'),
+      25 => '4'.fsub('A'),
+      26 => '5'.fsub('A'),
+      27 => '6'.fsub('A'),
+      28 => '7'.fsub('A')
     pin_colors 1 => :group_1,
       2  => :group_1,
       3  => :group_1,

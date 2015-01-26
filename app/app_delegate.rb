@@ -22,6 +22,7 @@ class AppDelegate
     Symbol.css_colors[:co] = '#f9f416'.uicolor
     Symbol.css_colors[:clk] = '#9d29f9'.uicolor
     Symbol.css_colors[:rst] = '#c98651'.uicolor
+    Symbol.css_colors[:data] = '#fbc825'.uicolor
     Symbol.css_colors[:sda] = '#fbc825'.uicolor
     Symbol.css_colors[:scl] = '#f8b409'.uicolor
     Symbol.css_colors[:addr] = '#a6d6a5'.uicolor

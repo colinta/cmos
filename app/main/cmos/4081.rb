@@ -1,9 +1,10 @@
 module CD4081
 
-  def cmos_4081_style
+  def cmos4081_style
     cmos_style
 
     title 'CD4081'
+    desc 'Quad 2-input AND'
     pins 14
     pin_labels 1 => 'A'.fsub('1'),
       2  => 'A'.fsub('2'),

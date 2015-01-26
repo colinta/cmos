@@ -1,9 +1,10 @@
 module CD4510
 
-  def cmos_4510_style
+  def cmos4510_style
     cmos_style
 
     title 'CD4510'
+    desc '4-bit up/down Counter, BCD out'
     pins 16
     pin_labels 1 => 'EN',
       2  => 'O'.fsub('4'),

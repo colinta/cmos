@@ -1,9 +1,10 @@
 module CD4017
 
-  def cmos_4017_style
+  def cmos4017_style
     cmos_style
 
     title 'CD4017'
+    desc '10-stage Johnson Counter'
     pins 16
     pin_labels 1 => 'Q6',
       2  => 'Q2',

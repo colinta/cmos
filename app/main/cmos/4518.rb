@@ -1,9 +1,10 @@
 module CD4518
 
-  def cmos_4518_style
+  def cmos4518_style
     cmos_style
 
     title 'CD4518'
+    desc 'Dual BCD Up Counter'
     pins 16
     pin_labels 1 => 'CLK'.fsub('B'),
       2  => 'EN'.fsub('B'),

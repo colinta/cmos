@@ -1,25 +1,26 @@
 module CD4051
 
-  def cmos_4051_style
+  def cmos4051_style
     cmos_style
 
     title 'CD4051'
+    desc '8-channel MUX/DEMUX'
     pins 16
-    pin_labels 1 => 'I'.fsub('6'),
-      2  => 'I'.fsub('7'),
+    pin_labels 1 => '6',
+      2  => '7',
       3  => 'I/O',
-      4  => 'I'.fsub('8'),
-      5  => 'I'.fsub('6'),
+      4  => '8',
+      5  => '6',
       6  => 'EN'.fsub('7'),
       7  => Vss.new,
       8  => Ground.new,
       9  => 'S'.fsub('2'),
       10 => 'S'.fsub('1'),
       11 => 'S'.fsub('0'),
-      12 => 'I'.fsub('4'),
-      13 => 'I'.fsub('1'),
-      14 => 'I'.fsub('2'),
-      15 => 'I'.fsub('3'),
+      12 => '4',
+      13 => '1',
+      14 => '2',
+      15 => '3',
       16 => Vdd.new
     pin_colors 1 => :out,
       2  => :out,

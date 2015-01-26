@@ -1,10 +1,11 @@
 # Quad 2-in NOR
 module CD4021
 
-  def cmos_4021_style
+  def cmos4021_style
     cmos_style
 
     title 'CD4021'
+    desc '8 stage ShiftIn register'
     pins 16
     pin_labels 1 => 'I'.fsub('8'),
       2  => 'O'.fsub('6'),

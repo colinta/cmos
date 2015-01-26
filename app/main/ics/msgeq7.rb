@@ -4,6 +4,7 @@ module MSGEQ7
     cmos_style
 
     title 'MSG EQ7'
+    desc "7-band\nGraph.Eq."
     pins 8
     pin_margin 10
     pin_labels 1 => Vdd.new,

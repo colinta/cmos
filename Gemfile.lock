@@ -7,7 +7,7 @@ PATH
 PATH
   remote: /Users/colinta/Code/rubymotion/sugarcube
   specs:
-    sugarcube (3.0.5)
+    sugarcube (3.1.1)
 
 PATH
   remote: /Users/colinta/Code/rubymotion/sweet-kit

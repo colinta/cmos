@@ -1,9 +1,10 @@
 module CD4002
 
-  def cmos_4002_style
+  def cmos4002_style
     cmos_style
 
     title 'CD4002'
+    desc 'Dual 4-input NOR'
     pins 14
     pin_labels 1 => 'A'.fsub('o'),
       2  => 'A'.fsub('1'),
@@ -33,8 +34,8 @@ module CD4002
       12 => :b_in,
       13 => :b_out,
       14 => :vdd
-    groups << [2,5]
-    groups << [9,12]
+    groups << [1,5]
+    groups << [9,13]
   end
 
 end
